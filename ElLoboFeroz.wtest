@@ -1,0 +1,58 @@
+import feroz.*
+import personas.*
+import chanchitos.*
+
+describe "el ataque del lobo feroz a caperucita y la abuelita" {
+  test "el lobo y caperucita" {
+    caperucita.añadirManzanas(5)
+    feroz.comer(caperucita) // con canasta
+    assert.equals(16, feroz.pesoUnidades())
+  }
+  
+  test "el lobo feroz ataca a caperucita y a la abuelita" {
+    feroz.correr()
+    feroz.correr()
+    feroz.comer(abuelita)
+    caperucita.correr()
+    caperucita.perderManzana()
+    feroz.comer(caperucita) // con canasta y todo
+    cazador.disparar(feroz)
+    feroz.sufrirCrisis()
+    assert.equals(10, feroz.pesoUnidades())
+  }
+}
+
+describe "el lobo puede derribar casas de paja pero no de ladrillo" {
+  test "el lobo feroz puede derribar casas de paja" {
+    feroz.soplar(casaPaja)
+    feroz.comer(primerChanchito) // se come al primer chanchito
+    feroz.soplar(casaPalos) // sopla de nuevo para derribar la casa
+    assert.that(casaPaja.estaDerribada() and casaPalos.estaDerribada())
+  }
+  
+  test "el lobo feroz se come a los dos primeros cerditos pero no puede derribar la casa de ladrillo" {
+    feroz.soplar(casaPaja)
+    feroz.comer(primerChanchito) // se come al primer chanchito
+    feroz.soplar(casaPalos) // sopla de nuevo para derribar la casa
+    feroz.comer(segundoChanchito) // se come al segundo chanchito
+    feroz.soplar(casaLadrillo) // sopla de nuevo para intentar derribar la casa
+    assert.notThat(casaLadrillo.estaDerribada())
+  }
+  
+  test "el lobo feroz no puede derribar casas de ladrillo" {
+    feroz.soplar(casaLadrillo)
+    assert.notThat(casaLadrillo.estaDerribada())
+  }
+}
+
+describe "el lobo feroz no se empacha luego de comerse a todos los personajes" {
+  test "el lobo feroz come todo lo que hay" {
+    feroz.comer(caperucita)
+    feroz.comer(abuelita)
+    feroz.comer(cazador)
+    feroz.comer(primerChanchito)
+    feroz.comer(segundoChanchito)
+    feroz.comer(tercerChanchito)
+    assert.notThat(feroz.estadoSalud() == "Enfermo")
+  }
+}
